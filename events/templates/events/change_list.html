@@ -19,7 +19,7 @@
             <th>Ending time</th>
             </tr>
             {% for e in events%}
-            {% if e.end_time > time%}
+            {% if e.day > date or e.end_time > time %}
             <tr>
                 <td>{{e.club}}</td>
                 <td>{{e.name}}</td>

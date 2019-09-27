@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from models import Event
+from .models import Event
 import datetime
 import calendar
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.safestring import mark_safe
-from utils import EventCalendar
+from .utils import EventCalendar
 
 # Register your models here.
 
