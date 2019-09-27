@@ -1,0 +1,35 @@
+
+<html>
+    <head>
+        <title>SNTC events schedule</title>
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                }
+        </style>
+    </head>
+    <body>
+        <h1> Upcoming/Ongoing Events</h1>
+        <table >
+            <tr>
+            <th>Club</th>
+            <th> Event</th>
+            <th>Date </th>
+            <th>Starting time</th>
+            <th>Ending time</th>
+            </tr>
+            {% for e in events%}
+            {% if e.day > date or e.end_time > time %}
+            <tr>
+                <td>{{e.club}}</td>
+                <td>{{e.name}}</td>
+                <td>{{e.day}}</td>
+                <td>{{e.start_time}}</td>
+                <td>{{e.end_time}}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    <a href="/admin/"> Admin</a>
+    </body>
+</html>

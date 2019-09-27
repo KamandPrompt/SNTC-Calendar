@@ -2,17 +2,17 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from models import Event
+from .models import Event
 import datetime
 import calendar
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.safestring import mark_safe
-from utils import EventCalendar
+from .utils import EventCalendar
 
 # Register your models here.
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ['day', 'start_time', 'end_time', 'notes']
+    list_display = ['club','name','day', 'start_time', 'end_time']
     change_list_template = 'admin/events/change_list.html'
 
     def changelist_view(self, request, extra_context=None):
