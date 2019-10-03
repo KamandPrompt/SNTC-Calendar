@@ -85,3 +85,5 @@ local_settings.py
 
 .env
 db.sqlite3
+passenger_wsgi.py
+static/admin/
