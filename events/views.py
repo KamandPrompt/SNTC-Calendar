@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from.models import Event
 from django.shortcuts import render
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def change_list(request):
     curr_time=datetime.now().time()
@@ -12,6 +12,8 @@ def change_list(request):
     evs_with_changes=[]
     i=0
     prev=0
+    nextday= datetime.today() + timedelta(days=1)
+    nextday=nextday.date()
     for e in evs:
         if (e.day > curr_date or e.end_time > curr_time):
             d={}
@@ -23,12 +25,13 @@ def change_list(request):
             b=False
             if i==0:
                 b=True
-            elif prev!=e.day:
+            elif prev!=e.day :
                 b=True
+                if prev > nextday:
+                    b=False
             d["change"]=b
             evs_with_changes.append(d)
             prev=d["day"]
             i+=1
-
-    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date})
+    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday})
 # Create your views here.
