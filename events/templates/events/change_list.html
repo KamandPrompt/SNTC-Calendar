@@ -1,35 +1,60 @@
-
-<html>
-    <head>
-        <title>SNTC events schedule</title>
-        <style>
-            table, th, td {
-                border: 1px solid black;
-                }
-        </style>
-    </head>
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Activities | IIT Mandi</title>
+	<meta name="description" content="Schedule of all events conducted by various clubs and societies of IIT Mandi">
+    <meta name="keywords" content="iit mandi, gymkhana, students, clubs,">
+    <link rel="stylesheet" href="{% static 'css/event.css' %}">
+</head>
     <body>
-        <h1> Upcoming/Ongoing Events</h1>
-        <table >
-            <tr>
-            <th>Club</th>
-            <th> Event</th>
-            <th>Date </th>
-            <th>Starting time</th>
-            <th>Ending time</th>
-            </tr>
-            {% for e in events%}
-            {% if e.day > date or e.end_time > time %}
-            <tr>
-                <td>{{e.club}}</td>
-                <td>{{e.name}}</td>
-                <td>{{e.day}}</td>
-                <td>{{e.start_time}}</td>
-                <td>{{e.end_time}}</td>
-            </tr>
-            {% endif %}
-            {% endfor %}
-        </table>
-    <a href="/admin/"> Admin</a>
-    </body>
+        <div class="container">
+            <div class="calendar light">
+              <div class="calendar_header">
+                <h1 class = "header_title">Events</h1>
+                <p class="header_copy"> <a href="/admin/"> Add new!<a> </p>
+              </div>
+              <!--
+              <div class="calendar_plan">
+                <div class="cl_plan">
+                  <div class="cl_title">Today</div>
+                  <div class="cl_copy">{{date}}</div>
+                </div>
+              </div>-->
+              <div class="calendar_events">
+                <p class="ce_title">Upcoming Events</p>
+               {% for e in events %}
+               {% if e.change %}
+              <div class="calendar_plan">
+                <div class="cl_plan">
+                {% if e.day == date %}
+                  <div class="cl_title">Today</div>
+                {% else %}
+                <div class="cl_title">Later</div>
+                {% endif %}
+                  <div class="cl_copy">{{e.day}}</div>
+                </div>
+              </div>
+              {% endif %}
+
+                <div class="event_item">
+                {% if e.start_time < time and e.day == date %}
+                  <div class="ei_Dot dot_active"></div>
+                {% else %}
+                  <div class="ei_Dot"></div>
+                {% endif %}
+                  <div class="ei_Title">{{e.start_time}} to {{e.end_time}}</div>
+                  <br><br>
+                  <div class="ei_club"><strong>{{e.club}}</strong></div>
+                  <br>
+                  <div class="ei_Copy">{{e.name}}</div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+</body>
 </html>
