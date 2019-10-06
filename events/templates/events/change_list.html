@@ -8,16 +8,25 @@
 	<meta name="description" content="Schedule of all events conducted by various clubs and societies of IIT Mandi">
     <meta name="keywords" content="iit mandi, gymkhana, students, clubs,">
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}"/>
 </head>
     <body>
+        
         <div class="container">
+          
             <div class="calendar light">
+        
               <div class="calendar_header">
-                <h1 class = "header_title">Events</h1>
-                <p class="header_copy"> <a href="/admin/"> Add new!<a> </p>
-              </div>
+                <h2>Events</h2>
+                <a href="/admin/"> <div class="img__wrap">
+                  <img src="/static/img/plus.png">
+                  <div class="img__description">New!</div>
+                </div></a>
+                <br>
+               </div>
+               <br>
               <div class="calendar_events">
-                <p class="ce_title">Upcoming Events</p>
+                
                {% for e in events %}
                {% if e.change %}
               <div class="calendar_plan">
@@ -42,7 +51,7 @@
                 {% else %}
                   <div class="ei_Dot"></div>
                 {% endif %}
-                  <div class="ei_Title">{{e.start_time}} to {{e.end_time}}</div>
+                  <div class="ei_Title">{{e.start_time|date:"G:i"}} to {{e.end_time|date:"G:i"}}</div>
                   <br>
                   <div class="ei_club"><strong>{{e.club}}</strong></div>
                   <div class="ei_Copy">{{e.name}}</div>
