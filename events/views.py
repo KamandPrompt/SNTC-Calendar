@@ -22,6 +22,7 @@ def change_list(request):
             d["start_time"]=e.start_time
             d["day"]=e.day
             d["name"]=e.name
+            d["venue"]=e.venue
             b=False
             if i==0:
                 b=True
