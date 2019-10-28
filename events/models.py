@@ -6,8 +6,10 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django import forms
+from datetime import datetime
 # Create your models here.
-
+def_end=datetime.now().replace(hour=23,minute=59)
+def_start=datetime.now().replace(hour=0,minute=0)
 class Event(models.Model):
     club= models.CharField(u'Club name', help_text=u'the name of your club',max_length=100,blank=False,null=True)
     name = models.TextField(u'Name fo the Event', help_text=u'Describe your event',null=True,blank=False)
@@ -39,7 +41,7 @@ class Event(models.Model):
         if self.end_time <= self.start_time:
             raise ValidationError('Ending hour must be after the starting hour')
 
-        events = Event.objects.filter(day=self.day)
+        events = Event.objects.filter(day=self.day).exclude(id=self.id)
         if events.exists():
             for event in events:
                 if self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
