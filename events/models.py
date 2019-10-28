@@ -14,8 +14,8 @@ class Event(models.Model):
     club= models.CharField(u'Club name', help_text=u'the name of your club',max_length=100,blank=False,null=True)
     name = models.TextField(u'Name fo the Event', help_text=u'Describe your event',null=True,blank=False)
     day = models.DateField(u'Day of the event', help_text=u'Day of the event')
-    start_time = models.TimeField(u'Starting time', help_text=u'Starting time')
-    end_time = models.TimeField(u'Final time', help_text=u'Final time')
+    start_time = models.TimeField(u'Starting time', help_text=u'Starting time',default=def_start)
+    end_time = models.TimeField(u'Final time', help_text=u'Final time',default=def_end)
     venue= models.CharField(u'Venue', help_text=u'Venue of the event',max_length=100,blank=True,null=True, default='TBA')
 
     class Meta:
