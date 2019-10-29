@@ -6,14 +6,16 @@ from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django import forms
+from datetime import datetime
 # Create your models here.
-
+def_end=datetime.now().replace(hour=23,minute=59)
+def_start=datetime.now().replace(hour=0,minute=0)
 class Event(models.Model):
     club= models.CharField(u'Club name', help_text=u'the name of your club',max_length=100,blank=False,null=True)
     name = models.TextField(u'Name fo the Event', help_text=u'Describe your event',null=True,blank=False)
     day = models.DateField(u'Day of the event', help_text=u'Day of the event')
-    start_time = models.TimeField(u'Starting time', help_text=u'Starting time')
-    end_time = models.TimeField(u'Final time', help_text=u'Final time')
+    start_time = models.TimeField(u'Starting time', help_text=u'Starting time',default=def_start)
+    end_time = models.TimeField(u'Final time', help_text=u'Final time',default=def_end)
     venue= models.CharField(u'Venue', help_text=u'Venue of the event',max_length=100,blank=True,null=True, default='TBA')
 
     class Meta:
@@ -39,7 +41,7 @@ class Event(models.Model):
         if self.end_time <= self.start_time:
             raise ValidationError('Ending hour must be after the starting hour')
 
-        events = Event.objects.filter(day=self.day)
+        events = Event.objects.filter(day=self.day).exclude(id=self.id)
         if events.exists():
             for event in events:
                 if self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
