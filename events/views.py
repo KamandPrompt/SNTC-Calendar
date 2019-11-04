@@ -3,10 +3,14 @@ from __future__ import unicode_literals
 from.models import Event
 from django.shortcuts import render
 from datetime import datetime, timedelta
+import pytz
 
 def change_list(request):
-    curr_time=datetime.now().time()
-    curr_date=datetime.now().date()
+    utc_time = datetime.utcnow()
+    timezone = pytz.timezone("Asia/Kolkata")
+    local_time = timezone.localize(utc_time)
+    curr_time=local_time.time()
+    curr_date=local_time.date()
     evs=Event.objects.filter(day__gte=curr_date)
     evs=sorted(evs,key=lambda x: (x.day,x.end_time))
     evs_with_changes=[]
