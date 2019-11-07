@@ -10,8 +10,8 @@ def change_list(request):
     gmt_timezone = pytz.timezone("GMT")
     timezone = pytz.timezone("Asia/Kolkata")
     utc_time = gmt_timezone.localize(utc_time)
-    curr_time=local_time.astimezone(timezone).time()
-    curr_date=local_time.astimezone(timezone).date()
+    curr_time=utc_time.astimezone(timezone).time()
+    curr_date=utc_time.astimezone(timezone).date()
     evs=Event.objects.filter(day__gte=curr_date)
     evs=sorted(evs,key=lambda x: (x.day,x.end_time))
     evs_with_changes=[]
