@@ -4,6 +4,7 @@ from.models import Event
 from django.shortcuts import render
 from datetime import datetime, timedelta
 import pytz
+from .forms import EventForm
 
 def change_list(request):
     utc_time = datetime.utcnow()
@@ -41,3 +42,15 @@ def change_list(request):
             i+=1
     return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday})
 # Create your views here.
+
+def event_new(request):
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.club = request.user
+            event.save()
+            # return redirect('post_detail', pk=post.pk)
+    else:
+        form = EventForm()
+    return render(request, 'events/event_edit.html', {'form': form})
