@@ -45,7 +45,7 @@ def change_list(request):
 
 def event_new(request):
     if not request.user.is_authenticated:
-        return redirect('/admin')
+        return redirect('/accounts/google/login')
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
