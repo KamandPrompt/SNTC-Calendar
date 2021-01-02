@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from.models import Event
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime, timedelta
 import pytz
 from .forms import EventForm
@@ -44,13 +44,15 @@ def change_list(request):
 # Create your views here.
 
 def event_new(request):
+    if not request.user.is_authenticated:
+        return redirect('/admin')
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user
             event.save()
-            # return redirect('post_detail', pk=post.pk)
+            return redirect('change_list')
     else:
         form = EventForm()
     return render(request, 'events/event_edit.html', {'form': form})
