@@ -140,3 +140,6 @@ STATIC_URL = '/static/'
 TIME_INPUT_FORMATS = [
     '%H:%M',        # '14:30'
 ]
+
+# ACCOUNT_EMAIL_REQUIRED=True
+# SOCIALACCOUNT_ADAPTER = 'mycalendar.adapters.IITMandiAccountAdapter' 
