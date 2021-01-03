@@ -11,12 +11,13 @@ from datetime import datetime
 def_end=datetime.now().replace(hour=23,minute=59)
 def_start=datetime.now().replace(hour=0,minute=0)
 class Event(models.Model):
-    club= models.CharField(u'Club name', help_text=u'the name of your club',max_length=100,blank=False,null=True)
-    name = models.TextField(u'Name fo the Event', help_text=u'Describe your event',null=True,blank=False)
-    day = models.DateField(u'Day of the event', help_text=u'Day of the event')
-    start_time = models.TimeField(u'Starting time', help_text=u'Starting time',default=def_start)
-    end_time = models.TimeField(u'Final time', help_text=u'Final time',default=def_end)
-    venue= models.CharField(u'Venue', help_text=u'Venue of the event',max_length=100,blank=True,null=True, default='TBA')
+    club= models.CharField(u'Club name', max_length=100, blank=False, null=True)
+    name = models.TextField(u'Event Details', null=True,blank=False)
+    day = models.DateField(u'Day of the event')
+    start_time = models.TimeField(u'Starting time', default=def_start)
+    end_time = models.TimeField(u'Final time', default=def_end)
+    venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
+    overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
     class Meta:
         verbose_name = u'Scheduling'
@@ -44,7 +45,7 @@ class Event(models.Model):
         events = Event.objects.filter(day=self.day).exclude(id=self.id)
         if events.exists():
             for event in events:
-                if self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
+                if not event.overlap and self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
                     raise ValidationError(
                         'There is an overlap with another event: ' + str(event.day) + ', ' + str(
                             event.start_time) + '-' + str(event.end_time))

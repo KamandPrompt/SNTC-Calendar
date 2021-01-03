@@ -10,6 +10,23 @@
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}"/>
 </head>
+<style>
+  a:link {
+    color: cyan;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:visited {
+    color: cyan;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:hover {
+    color: green;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  </style>
     <body>
         
         <div class="container">
@@ -18,7 +35,7 @@
         
               <div class="calendar_header">
                 <h2>Events</h2>
-                <a href="/admin/"> <div class="img__wrap">
+                <a href="/event/new/"> <div class="img__wrap">
                   <img src="/static/img/plus.png">
                   <div class="img__description">New!</div>
                 </div></a>
@@ -27,14 +44,14 @@
                <br>
               <div class="calendar_events">
                 
-               {% for e in events %}
-               {% if e.change %}
+               {% for event in events %}
+               {% if event.change %}
               <div class="calendar_plan">
-              {% if e.day == date %}
+              {% if event.day == date %}
                 <div class="cl_plan">
                   <div class="cl_title">Today</div>
                 </div>
-              {% elif e.day == tomorrow %}
+              {% elif event.day == tomorrow %}
               <div class="cl_plan">
                   <div class="cl_title">Tomorrow</div>
               {% else %}
@@ -46,17 +63,21 @@
               {% endif %}
 
                 <div class="event_item">
-                {% if e.start_time < time and e.day == date %}
+                {% if event.start_time < time and event.day == date %}
                   <div class="ei_Dot dot_active"></div>
                 {% else %}
                   <div class="ei_Dot"></div>
                 {% endif %}
-                  <div class="ei_Title">{{e.start_time|date:"G:i"}} to {{e.end_time|date:"G:i"}}</div>
+                  <div class="ei_Title">{{event.start_time|date:"G:i"}} to {{event.end_time|date:"G:i"}}</div>
                   <br>
-                  <div class="ei_club"><strong>{{e.name}}</strong></div>
-                  <div class="ei_Copy">{{e.club}}</div>
-                  <div class="ei_Date">{{e.day}} </div>
-                  <div class="ei_Venue">Venue: {{e.venue}} </div>
+                  <div class="ei_club"><strong>{{event.name}}</strong></div>
+                  <div class="ei_Copy">{{event.club}}</div>
+                  {% if event.club == user %}
+                  <div class="ei_Title"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
+                  <div class="ei_Title"><a href="{% url 'event_delete' pk=event.pk %}">Delete</a></div>
+                  {% endif %}
+                  <div class="ei_Date">{{event.day}}</div>
+                  <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
                 </div>
                 {% endfor %}
               </div>

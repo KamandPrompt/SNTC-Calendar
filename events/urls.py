@@ -1,5 +1,10 @@
 from django.conf.urls import url,include
 from . import views
+from django.urls import path
+
 urlpatterns = [
-    url('', views.change_list, name='change_list'),
+    path('', views.change_list, name='change_list'),
+    path('event/new/', views.event_new, name='event_new'),
+    path('event/<int:pk>/edit/', views.event_edit, name='event_edit'),
+    path('event/<int:pk>/delete/',views.event_delete, name='event_delete')
 ]
