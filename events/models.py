@@ -17,6 +17,7 @@ class Event(models.Model):
     start_time = models.TimeField(u'Starting time', default=def_start)
     end_time = models.TimeField(u'Final time', default=def_end)
     venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
+    overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
     class Meta:
         verbose_name = u'Scheduling'
@@ -44,7 +45,7 @@ class Event(models.Model):
         events = Event.objects.filter(day=self.day).exclude(id=self.id)
         if events.exists():
             for event in events:
-                if self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
+                if not event.overlap and self.check_overlap(event.start_time, event.end_time, self.start_time, self.end_time):
                     raise ValidationError(
                         'There is an overlap with another event: ' + str(event.day) + ', ' + str(
                             event.start_time) + '-' + str(event.end_time))

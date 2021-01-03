@@ -50,7 +50,7 @@ def event_new(request):
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
-            event.club = request.user
+            event.club = str(request.user).upper()
             event.save()
             return redirect('change_list')
     else:
