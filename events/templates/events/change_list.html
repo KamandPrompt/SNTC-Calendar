@@ -44,14 +44,14 @@
                <br>
               <div class="calendar_events">
                 
-               {% for e in events %}
-               {% if e.change %}
+               {% for event in events %}
+               {% if event.change %}
               <div class="calendar_plan">
-              {% if e.day == date %}
+              {% if event.day == date %}
                 <div class="cl_plan">
                   <div class="cl_title">Today</div>
                 </div>
-              {% elif e.day == tomorrow %}
+              {% elif event.day == tomorrow %}
               <div class="cl_plan">
                   <div class="cl_title">Tomorrow</div>
               {% else %}
@@ -63,17 +63,18 @@
               {% endif %}
 
                 <div class="event_item">
-                {% if e.start_time < time and e.day == date %}
+                {% if event.start_time < time and event.day == date %}
                   <div class="ei_Dot dot_active"></div>
                 {% else %}
                   <div class="ei_Dot"></div>
                 {% endif %}
-                  <div class="ei_Title">{{e.start_time|date:"G:i"}} to {{e.end_time|date:"G:i"}}</div>
+                  <div class="ei_Title">{{event.start_time|date:"G:i"}} to {{event.end_time|date:"G:i"}}</div>
                   <br>
-                  <div class="ei_club"><strong>{{e.name}}</strong></div>
-                  <div class="ei_Copy">{{e.club}}</div>
-                  <div class="ei_Date">{{e.day}} </div>
-                  <div class="ei_Venue">Venue: {{ e.venue|urlize }} </div>
+                  <div class="ei_club"><strong>{{event.name}}</strong></div>
+                  <div class="ei_Copy">{{event.club}}</div>
+                  <div class="ei_Title"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
+                  <div class="ei_Date">{{event.day}}</div>
+                  <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
                 </div>
                 {% endfor %}
               </div>

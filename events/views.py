@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from.models import Event
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta
 import pytz
 from .forms import EventForm
@@ -37,6 +37,7 @@ def change_list(request):
                 if prev > nextday:
                     b=False
             d["change"]=b
+            d["pk"] = e.pk
             evs_with_changes.append(d)
             prev=d["day"]
             i+=1
@@ -55,4 +56,19 @@ def event_new(request):
             return redirect('change_list')
     else:
         form = EventForm()
+    return render(request, 'events/event_edit.html', {'form': form})
+
+def event_edit(request, pk):
+    if not request.user.is_authenticated:
+        return redirect('/accounts/google/login')
+    event = get_object_or_404(Event, pk=pk)
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.club = str(request.user).upper()
+            event.save()
+            return redirect('change_list')
+    else:
+        form = EventForm(instance=event)
     return render(request, 'events/event_edit.html', {'form': form})
