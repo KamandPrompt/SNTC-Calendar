@@ -14,7 +14,7 @@ Install **pip** first
 
 Then install **virtualenv** using pip3
 
-    sudo pip3 install virtualenv 
+    pip3 install virtualenv 
 
 Now create a virtual environment
 
@@ -26,13 +26,17 @@ Active your virtual environment:
 
     source venv/bin/activate
 
-Run the following commands in project directory
+Run the following commands in project directory.
+
+You might need to delete **db.sqlite3** to start afresh.
 
 ```bash
 pip install -r requirements.txt
-python manage.py migrate
+python manage.py migrate --run-syncdb
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
 Go to [http:localhost:8000/admin](http:localhost:8000/admin) and sign in as superuser.
+
+Add Google OAuth2.0 API Key's credentials in admin Social Applications.
