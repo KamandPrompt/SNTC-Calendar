@@ -41,7 +41,7 @@ def change_list(request):
             evs_with_changes.append(d)
             prev=d["day"]
             i+=1
-    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday})
+    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday,'user':str(request.user).upper()})
 # Create your views here.
 
 def event_new(request):
@@ -59,9 +59,9 @@ def event_new(request):
     return render(request, 'events/event_edit.html', {'form': form})
 
 def event_edit(request, pk):
-    if not request.user.is_authenticated:
-        return redirect('/accounts/google/login')
     event = get_object_or_404(Event, pk=pk)
+    if not request.user.is_authenticated  or str(request.user).upper() != event.club:
+        return redirect('/accounts/google/login')
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
@@ -72,3 +72,10 @@ def event_edit(request, pk):
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_edit.html', {'form': form})
+
+def event_delete(request, pk):
+    event = get_object_or_404(Event, pk=pk)
+    if not request.user.is_authenticated  or str(request.user).upper() != event.club:
+        return redirect('/accounts/google/login')
+    Event.objects.filter(pk=pk).delete()
+    return redirect('change_list')
