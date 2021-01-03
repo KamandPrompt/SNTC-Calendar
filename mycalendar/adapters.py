@@ -12,7 +12,8 @@ class IITMandiAccountAdapter(DefaultSocialAccountAdapter):
             email_domain = emailsplit[1].lower()
             email_user = emailsplit[0].lower()
             if 'iitmandi.ac.in' not in email_domain or not email_user.isalpha():
-                raise ValidationError(sociallogin.user.email + ' is not authorized to access Activities. Contact Admin.')
+                if '_' not in email_user:
+                    raise ValidationError(sociallogin.user.email + ' is not authorized to access Activities. Contact Admin.')
             else:
                 pass
 
