@@ -26,6 +26,9 @@
     background-color: transparent;
     text-decoration: underline;
   }
+  .img__logout {
+    float: right;
+  }
   </style>
     <body>
         
@@ -39,6 +42,13 @@
                   <img src="/static/img/plus.png">
                   <div class="img__description">New!</div>
                 </div></a>
+                {% if " " in user %}
+                <div class="img__logout">
+                  <a href="/accounts/logout"> 
+                  <img src="/static/img/logout.png" width="35px">
+                  </a>
+                </div>
+                {% endif %}
                 <br>
                </div>
                <br>

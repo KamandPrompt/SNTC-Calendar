@@ -41,7 +41,11 @@ def change_list(request):
             evs_with_changes.append(d)
             prev=d["day"]
             i+=1
-    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday,'user':str(request.user).upper()})
+    try:
+        usr = request.user.first_name + " " + request.user.last_name
+    except:
+        usr = request.user
+    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday,'user':usr})
 # Create your views here.
 
 def event_new(request):
@@ -51,7 +55,7 @@ def event_new(request):
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
-            event.club = str(request.user).upper()
+            event.club = request.user.first_name + " " + request.user.last_name
             event.save()
             return redirect('change_list')
     else:
@@ -60,13 +64,13 @@ def event_new(request):
 
 def event_edit(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    if not request.user.is_authenticated  or str(request.user).upper() != event.club:
+    if not request.user.is_authenticated  or request.user.first_name not in event.club:
         return redirect('/accounts/google/login')
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             event = form.save(commit=False)
-            event.club = str(request.user).upper()
+            event.club = request.user.first_name + " " + request.user.last_name
             event.save()
             return redirect('change_list')
     else:
@@ -75,7 +79,7 @@ def event_edit(request, pk):
 
 def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    if not request.user.is_authenticated  or str(request.user).upper() != event.club:
+    if not request.user.is_authenticated  or request.user.first_name not in event.club:
         return redirect('/accounts/google/login')
     Event.objects.filter(pk=pk).delete()
     return redirect('change_list')
