@@ -133,11 +133,6 @@
     margin-left:17px;
     color: #363b41;
   }
-  .ei_Venue{
-    font-size:13px;
-    margin-left:17px;
-    color: #363b41;
-  }
   p{
     color: #363b41;
   }
@@ -147,8 +142,8 @@
   .ei_Date{
     position: absolute;
     top: 15px;
-    right: 0px;
-    font-size: 13px;
+    right: 7px;
+    font-size: 11px;
     color: #363b41;
     
   }
@@ -179,4 +174,37 @@
  
  right:100px;
   }
- 
+  a:link {
+    color: cyan;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:visited {
+    color: cyan;
+    background-color: transparent;
+    text-decoration: none;
+  }
+  a:hover {
+    color: green;
+    background-color: transparent;
+    text-decoration: underline;
+  }
+  .img__logout {
+    float: right;
+  }
+  .ei_Del
+  {
+    font-size:11px;
+    margin-left:7px;
+    color: #363b41;
+    display:inline-block;
+  }
+  .event_item:hover .ei_Del{
+      color:#fff;
+    }
+    .ei_Venue{
+    font-size:13px;
+    margin-left:17px;
+    margin-top: 7px;
+    color: #363b41;
+  }

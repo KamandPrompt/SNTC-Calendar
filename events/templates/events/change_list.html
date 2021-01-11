@@ -10,26 +10,6 @@
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
-<style>
-  a:link {
-    color: cyan;
-    background-color: transparent;
-    text-decoration: none;
-  }
-  a:visited {
-    color: cyan;
-    background-color: transparent;
-    text-decoration: none;
-  }
-  a:hover {
-    color: green;
-    background-color: transparent;
-    text-decoration: underline;
-  }
-  .img__logout {
-    float: right;
-  }
-  </style>
     <body>
         
         <div class="container">
@@ -83,8 +63,8 @@
                   <div class="ei_club"><strong>{{event.name}}</strong></div>
                   <div class="ei_Copy">{{event.club}}</div>
                   {% if event.club == user %}
-                  <div class="ei_Copy"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
-                  <div class="ei_Copy"><a href="{% url 'event_delete' pk=event.pk %}" onclick="return confirm('Delete this Event?')">Delete</a></div>
+                  <div class="ei_Del"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
+                  <div class="ei_Del"><a href="{% url 'event_delete' pk=event.pk %}" onclick="return confirm('Delete this Event?')">Delete</a></div>
                   {% endif %}
                   <div class="ei_Date">{{event.day}}</div>
                   <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
