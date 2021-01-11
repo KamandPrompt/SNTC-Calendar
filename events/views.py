@@ -56,6 +56,7 @@ def event_new(request):
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
+            print(event.club)
             event.save()
             return redirect('change_list')
     else:
@@ -71,6 +72,7 @@ def event_edit(request, pk):
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
+            print(event.club)
             event.save()
             return redirect('change_list')
     else:
