@@ -14,8 +14,8 @@ class Event(models.Model):
     club= models.CharField(u'Club name', max_length=100, blank=False, null=True)
     name = models.TextField(u'Event Details', null=True,blank=False)
     day = models.DateField(u'Day of the event')
-    start_time = models.TimeField(u'Starting time', default=def_start)
-    end_time = models.TimeField(u'Final time', default=def_end)
+    start_time = models.TimeField(u'Starting time')
+    end_time = models.TimeField(u'Final time')
     venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
     overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
