@@ -32,7 +32,9 @@ You might need to delete **db.sqlite3** to start afresh.
 
 ```bash
 pip install -r requirements.txt
+python manange.py makemigrations
 python manage.py migrate --run-syncdb
+python manage.py collectstatic
 python manage.py createsuperuser
 python manage.py runserver
 ```
