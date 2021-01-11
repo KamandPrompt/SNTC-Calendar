@@ -26,6 +26,9 @@
     background-color: transparent;
     text-decoration: underline;
   }
+  .img__logout {
+    float: right;
+  }
   </style>
     <body>
         
@@ -39,6 +42,13 @@
                   <img src="/static/img/plus.png">
                   <div class="img__description">New!</div>
                 </div></a>
+                {% if " " in user %}
+                <div class="img__logout">
+                  <a href="/accounts/logout"> 
+                  <img src="/static/img/logout.png" width="35px">
+                  </a>
+                </div>
+                {% endif %}
                 <br>
                </div>
                <br>
@@ -73,8 +83,8 @@
                   <div class="ei_club"><strong>{{event.name}}</strong></div>
                   <div class="ei_Copy">{{event.club}}</div>
                   {% if event.club == user %}
-                  <div class="ei_Title"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
-                  <div class="ei_Title"><a href="{% url 'event_delete' pk=event.pk %}">Delete</a></div>
+                  <div class="ei_Copy"><a href="{% url 'event_edit' pk=event.pk %}">(Edit)</a></div>
+                  <div class="ei_Copy"><a href="{% url 'event_delete' pk=event.pk %}" onclick="return confirm('Delete this Event?')">Delete</a></div>
                   {% endif %}
                   <div class="ei_Date">{{event.day}}</div>
                   <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
