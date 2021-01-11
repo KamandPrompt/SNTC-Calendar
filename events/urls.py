@@ -1,6 +1,7 @@
 from django.conf.urls import url,include
 from . import views
 from django.urls import path
+from allauth.account.views import LogoutView
 
 urlpatterns = [
     path('', views.change_list, name='change_list'),
