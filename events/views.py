@@ -14,7 +14,7 @@ def change_list(request):
     curr_time=utc_time.astimezone(timezone).time()
     curr_date=utc_time.astimezone(timezone).date()
     evs=Event.objects.filter(day__gte=curr_date)
-    evs=sorted(evs,key=lambda x: (x.day,x.end_time))
+    evs=sorted(evs,key=lambda x: (x.day,x.start_time))
     evs_with_changes=[]
     i=0
     prev=0
