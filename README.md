@@ -42,3 +42,9 @@ python manage.py runserver
 Go to [http:localhost:8000/admin](http:localhost:8000/admin) and sign in as superuser.
 
 Add Google OAuth2.0 API Key's credentials in admin Social Applications.
+
+For running the web-app on the server as a background process, use **nohup**.
+```bash
+nohup python manage.py runserver &  
+```
+This will output a *PID*, which can be later used to kill the process.
