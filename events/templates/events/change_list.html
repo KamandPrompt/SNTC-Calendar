@@ -9,6 +9,11 @@
     <meta name="keywords" content="iit mandi, gymkhana, students, clubs,">
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+    <!-- calender button theme css -->
+	<link rel="stylesheet" href="{% static '../../../calendericon/css/theme8.css %'}" type="text/css" media="screen" />
+
+  <!-- AddEvent script -->
+<script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
 </head>
     <body>
         
@@ -68,6 +73,18 @@
                   {% endif %}
                   <div class="ei_Date">{{event.day}}</div>
                   <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
+                  
+                  <!-- Button code -->
+                  <div title="Add to Calendar" class="addeventatc" style="position: absolute; bottom: 15px;right: 7px; max-width: 40%; font-size: 8px;">
+                    <img src="../../../calendericon/gfx/icon-calendar-t1.svg" alt="" style="width:18px;" />
+                    <!-- <span class="textw">Add to Calender</span> -->
+                    <span class="start">{{event.start_time|date:"G:i"}}</span>
+                    <span class="end">{{event.end_time|date:"G:i"}}</span>
+                    <span class="timezone">Asia/Calcutta</span>
+                    <span class="title">{{event.name}}</span>
+                    <span class="description"></span>
+                    <span class="location">{{ event.venue|urlize }}</span>
+                  </div>
                 </div>
                 {% endfor %}
               </div>
