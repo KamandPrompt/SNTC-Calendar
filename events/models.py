@@ -19,6 +19,8 @@ class Event(models.Model):
     venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
     overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
+    # event_id = models.CharField(u'Event Id', max_length=200, primary_key=True)
+
     class Meta:
         verbose_name = u'Scheduling'
         verbose_name_plural = u'Scheduling'
