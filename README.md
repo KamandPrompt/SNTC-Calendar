@@ -39,9 +39,17 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Go to [http:localhost:8000/admin](http:localhost:8000/admin) and sign in as superuser.
 
-Add Google OAuth2.0 API Key's credentials in admin Social Applications.
+### Adding Google OAuth2.0 API Key's credentials in admin Social Applications.
+1. create a Google Cloud Console Project.
+2. Go to Credentials, Auth consent, add a new app.
+3. Create new OAuth Credentials and download the json.
+![](./resources/gcp.png)
+
+4. Go to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and sign in as superuser.
+5. Add a new `Site`.
+6. Add the `Social Applications` and the credentials and the site.
+7. You are ready to run the App!
 
 For running the web-app on the server as a background process, use **nohup**.
 ```bash
