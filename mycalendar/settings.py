@@ -145,4 +145,17 @@ TIME_INPUT_FORMATS = [
 
 ACCOUNT_EMAIL_REQUIRED=True
 ACCOUNT_LOGOUT_ON_GET=True
-SOCIALACCOUNT_ADAPTER = 'mycalendar.adapters.IITMandiAccountAdapter' 
+SOCIALACCOUNT_ADAPTER = 'mycalendar.adapters.IITMandiAccountAdapter'
+SOCIALACCOUNT_STORE_TOKENS=True
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/calendar',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        }
+    }
+}

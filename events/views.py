@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta
 import pytz
 from .forms import EventForm
+from allauth.socialaccount.models import SocialToken
 
 def change_list(request):
     utc_time = datetime.utcnow()
@@ -51,13 +52,43 @@ def change_list(request):
 def event_new(request):
     if not request.user.is_authenticated:
         return redirect('/accounts/google/login')
+
+    result = SocialToken.objects.filter(account__user=request.user, account__provider='google')
+
+    if len(result) == 0:
+        return redirect('/accounts/google/login')
+
+    result = result.get()
+    refresh_token = result.__dict__.get('token_secret')
+    access_token = result.__dict__.get('token')
+    expires_at = result.__dict__.get('expires_at')
+
+    if refresh_token is None:
+        # Check if access token is valid or not
+        if access_token is None:
+            return redirect('/accounts/google/login')
+        else:
+            now = datetime.now()
+            if now + timedelta(minutes=30) > expires_at:
+                print("Access token expired!")
+                return redirect('/accounts/google/login')
+
+    # We have refresh token, so we are good to go to create calender event
+
+    # print("result", result.__dict__)
+    # print("Expires timezone", result.__dict__.get('expires_at'))
+    # print("RESULT token", result.__dict__.get('token'))
+    # print("RESULT refresh_token", result.__dict__.get('token_secret'))
+
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
             print(event.club)
-            event.save()
+            # event.save()
+
+            # We will add the code to create event to calender
             return redirect('change_list')
     else:
         form = EventForm()
@@ -73,7 +104,8 @@ def event_edit(request, pk):
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
             print(event.club)
-            event.save()
+            print("PRIYAM Event", event)
+            # event.save()
             return redirect('change_list')
     else:
         form = EventForm(instance=event)
