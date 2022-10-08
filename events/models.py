@@ -19,7 +19,8 @@ class Event(models.Model):
     venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
     overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
-    # event_id = models.CharField(u'Event Id', max_length=200, primary_key=True)
+    id = models.CharField(u'Event Id', max_length=200, primary_key=True)
+    event_link = models.CharField(u'Google Calender Event Link', max_length=200, blank=True, null=True)
 
     class Meta:
         verbose_name = u'Scheduling'
