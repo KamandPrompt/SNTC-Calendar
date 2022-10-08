@@ -14,7 +14,7 @@ class TimeInput(forms.TimeInput):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ('name', 'day', 'start_time', 'end_time', 'venue', 'overlap')
+        fields = ('name', 'venue', 'description', 'day', 'start_time', 'end_time', 'overlap')
         widgets = {
             'day': DateInput(),
             'start_time':TimeInput(),

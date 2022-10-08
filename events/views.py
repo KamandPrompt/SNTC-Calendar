@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+from http.client import HTTPResponse
+
+from events.calender_utils import CalenderEventsUtil
 from.models import Event
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta
@@ -30,6 +33,7 @@ def change_list(request):
             d["day"]=e.day
             d["name"]=e.name
             d["venue"]=e.venue
+            d["event_link"]=e.event_link
             b=False
             if i==0:
                 b=True
@@ -46,17 +50,18 @@ def change_list(request):
         usr = request.user.first_name + " " + request.user.last_name
     except:
         usr = request.user
-    return render(request, 'events/change_list.html', {'events':evs_with_changes,'time':curr_time,'date':curr_date,'tomorrow':nextday,'user':usr})
-# Create your views here.
+    return render(request, 'events/change_list.html', {
+        'events': evs_with_changes,
+        'time': curr_time,
+        'date': curr_date,
+        'tomorrow': nextday,
+        'user':usr })
 
-def event_new(request):
-    if not request.user.is_authenticated:
-        return redirect('/accounts/google/login')
-
-    result = SocialToken.objects.filter(account__user=request.user, account__provider='google')
+def has_calender_access(user):
+    result = SocialToken.objects.filter(account__user=user, account__provider='google')
 
     if len(result) == 0:
-        return redirect('/accounts/google/login')
+        return False, None, None
 
     result = result.get()
     refresh_token = result.__dict__.get('token_secret')
@@ -66,30 +71,71 @@ def event_new(request):
     if refresh_token is None:
         # Check if access token is valid or not
         if access_token is None:
-            return redirect('/accounts/google/login')
+            return False, None, None
         else:
             now = datetime.now()
             if now + timedelta(minutes=30) > expires_at:
                 print("Access token expired!")
-                return redirect('/accounts/google/login')
+                return False, access_token, None
+    
+    return True, access_token, refresh_token
+
+def handle_calender_event(event, access_token, refresh_token, method='create'):
+    ''' Creates the calender event and returns the values '''
+
+    print("EVENT OLD: ", event.__dict__)
+    google_calender = CalenderEventsUtil(
+        access_token=access_token,
+        refresh_token=refresh_token
+    )
+
+    start_date_time = event.day.isoformat() + "T" + event.start_time.isoformat()
+    end_date_time = event.day.isoformat() + "T" + event.end_time.isoformat()
+
+    # Now use the above google_calender object to create a new event
+    # TODO - Allow invites to be added
+    event_data = google_calender.create_event_data(
+        str(event.name),
+        str(event.venue) + ', IIT Mandi',
+        str(event.description),
+        start_date_time,
+        end_date_time,
+        ['sethpriyam1@gmail.com', 'b19058@students.iitmandi.ac.in'],
+    )
+
+    calender_response = google_calender.create_calender_event(event_data)
+
+    print("CALENDER Response", calender_response)
+
+    if calender_response.get('success'):
+        event.id = calender_response.get('event_id')
+        event.event_link = calender_response.get('event_link')
+        
+        print("EVENT NEW", event.__dict__)
+        event.save()
+
+        # We will add the code to create event to calender
+        return redirect('change_list')                
+    else:
+        resp = "Event creation failed on Google Calender" + str(calender_response)
+        print(resp)
+        return HTTPResponse(resp)
+
+def event_new(request):
+    if not request.user.is_authenticated:
+        return redirect('/accounts/google/login')
+
+    has_access, access_token, refresh_token = has_calender_access(request.user)
+    if not has_access:
+        return redirect('/accounts/google/login')
 
     # We have refresh token, so we are good to go to create calender event
-
-    # print("result", result.__dict__)
-    # print("Expires timezone", result.__dict__.get('expires_at'))
-    # print("RESULT token", result.__dict__.get('token'))
-    # print("RESULT refresh_token", result.__dict__.get('token_secret'))
-
     if request.method == "POST":
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
-            print(event.club)
-            # event.save()
-
-            # We will add the code to create event to calender
-            return redirect('change_list')
+            return handle_calender_event(event, access_token, refresh_token, method='create')
     else:
         form = EventForm()
     return render(request, 'events/event_edit.html', {'form': form})
@@ -98,6 +144,7 @@ def event_edit(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if not request.user.is_authenticated  or request.user.first_name not in event.club:
         return redirect('/accounts/google/login')
+
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():

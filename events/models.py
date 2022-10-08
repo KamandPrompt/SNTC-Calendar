@@ -12,13 +12,25 @@ def_end=datetime.now().replace(hour=23,minute=59)
 def_start=datetime.now().replace(hour=0,minute=0)
 class Event(models.Model):
     club= models.CharField(u'Club name', max_length=100, blank=False, null=True)
-    name = models.TextField(u'Event Details', null=True,blank=False)
+
+    # Maps to summary
+    name = models.CharField(u'Event Details', max_length=200, null=True, blank=False)
+
+    # Maps to start_date_time and end_date_time
     day = models.DateField(u'Day of the event')
     start_time = models.TimeField(u'Starting time')
     end_time = models.TimeField(u'Final time')
-    venue= models.CharField(u'Venue or link',max_length=100, blank=True, null=True, default='TBA')
+
+    # Maps to location
+    venue = models.CharField(u'Venue or location',max_length=100, blank=True, null=True, default='TBA')
+
+    # Maps to description of the event
+    description = models.TextField(u'Description of the Event', null=True, blank=True)
+
+    # A check if overlap should be allowed
     overlap = models.BooleanField(u'Allow overlaps',default=False,blank=False,null=False)
 
+    # Maps to google calender event
     id = models.CharField(u'Event Id', max_length=200, primary_key=True)
     event_link = models.CharField(u'Google Calender Event Link', max_length=200, blank=True, null=True)
 
