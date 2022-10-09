@@ -22,11 +22,13 @@
                   <div class="header_heading">
                     <h5>Events</h5>
                   </div>
+                  {% if " " in user %}
                   <div class="header_right">
                     <h5>
                       <a href="/subscription"> My subscriptions </a>
                     </h5>
                   </div>
+                  {% endif %}
                 </div>
                 <a href="/event/new/"> <div class="img__wrap">
                   <img src="/static/img/plus.png">

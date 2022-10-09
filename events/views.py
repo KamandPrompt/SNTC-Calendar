@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.http import JsonResponse
 from events.calender_utils import CalenderEventsUtil
-from.models import Event
+from.models import Event, Subscription
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta
 import pytz
@@ -80,7 +80,7 @@ def has_calender_access(user):
     
     return True, access_token, refresh_token
 
-def handle_calender_event(event, access_token, refresh_token, method='create'):
+def handle_calender_event(user, event, access_token, refresh_token, method='create'):
     ''' Creates the calender event and returns the values
         @params method : 'create', 'update'
     '''
@@ -94,8 +94,14 @@ def handle_calender_event(event, access_token, refresh_token, method='create'):
     if method == 'delete':
         calender_response = google_calender.delete_calender_event(event.id)
     else:
+        event.club = user.first_name + " " + user.last_name
+        event.created_by_email = user.email
+
         start_date_time = event.day.isoformat() + "T" + event.start_time.isoformat()
         end_date_time = event.day.isoformat() + "T" + event.end_time.isoformat()
+
+        subscriptions = Subscription.objects.filter(club_email=user.email)
+        attendees_emails = list(subscriptions.values_list('student_email', flat=True))
 
         # Now use the above google_calender object to create a new event
         # TODO - Allow invites to be added
@@ -105,7 +111,7 @@ def handle_calender_event(event, access_token, refresh_token, method='create'):
             str(event.description),
             start_date_time,
             end_date_time,
-            ['sethpriyam1@gmail.com', 'b19058@students.iitmandi.ac.in'],
+            attendees_emails,
         )
 
         if method == 'update':
@@ -141,8 +147,7 @@ def event_new(request):
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
-            event.club = request.user.first_name + " " + request.user.last_name
-            return handle_calender_event(event, access_token, refresh_token, method='create')
+            return handle_calender_event(request.user, event, access_token, refresh_token, method='create')
     else:
         form = EventForm()
     return render(request, 'events/event_edit.html', {'form': form})
@@ -160,8 +165,7 @@ def event_edit(request, pk):
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             event = form.save(commit=False)
-            event.club = request.user.first_name + " " + request.user.last_name
-            return handle_calender_event(event, access_token, refresh_token, method='update')
+            return handle_calender_event(request.user, event, access_token, refresh_token, method='update')
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_edit.html', {'form': form})
@@ -177,7 +181,7 @@ def event_delete(request, pk):
 
     event = Event.objects.filter(pk=pk)
     event.id = pk
-    return handle_calender_event(event, access_token, refresh_token, method='delete')
+    return handle_calender_event(request.user, event, access_token, refresh_token, method='delete')
 
 def subscription_list(request):
     if not request.user.is_authenticated:

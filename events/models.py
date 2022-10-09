@@ -11,7 +11,8 @@ from datetime import datetime
 def_end=datetime.now().replace(hour=23,minute=59)
 def_start=datetime.now().replace(hour=0,minute=0)
 class Event(models.Model):
-    club= models.CharField(u'Club name', max_length=100, blank=False, null=True)
+    club = models.CharField(u'Club name', max_length=100, blank=False, null=True)
+    created_by_email = models.CharField(u'Email of Creator', max_length=100, blank=True, null=False)
 
     # Maps to summary
     name = models.CharField(u'Event Details', max_length=200, null=True, blank=False)
@@ -64,3 +65,9 @@ class Event(models.Model):
                     raise ValidationError(
                         'There is an overlap with another event: ' + str(event.day) + ', ' + str(
                             event.start_time) + '-' + str(event.end_time))
+
+class Subscription(models.Model):
+    # Stores the information for each club
+    id = models.AutoField(primary_key=True)
+    club_email = models.CharField(u'Club Email', max_length=100, blank=False, null=False)
+    student_email = models.CharField(u'Student Email', max_length=100)
