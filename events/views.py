@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from http.client import HTTPResponse
 
+from django.http import JsonResponse
 from events.calender_utils import CalenderEventsUtil
 from.models import Event
 from django.shortcuts import render, redirect, get_object_or_404
@@ -126,7 +126,7 @@ def handle_calender_event(event, access_token, refresh_token, method='create'):
     else:
         resp = "Event " + str(method) + " failed on Google Calender" + str(calender_response)
         print(resp)
-        return HTTPResponse(resp)
+        return JsonResponse({"error": resp})
 
 def event_new(request):
     if not request.user.is_authenticated:
@@ -178,3 +178,9 @@ def event_delete(request, pk):
     event = Event.objects.filter(pk=pk)
     event.id = pk
     return handle_calender_event(event, access_token, refresh_token, method='delete')
+
+def subscription_list(request):
+    if not request.user.is_authenticated:
+        return redirect('/accounts/google/login')
+
+    return JsonResponse({"hello": "world"})

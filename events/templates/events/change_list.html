@@ -7,17 +7,27 @@
 	<title>Activities | IIT Mandi</title>
 	<meta name="description" content="Schedule of all events conducted by various clubs and societies of IIT Mandi">
     <meta name="keywords" content="iit mandi, gymkhana, students, clubs,">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/css/materialize.min.css" integrity="sha256-qj3p6P1fJIV+Ndv7RW1ovZI2UhOuboj9GcODzcNFIN8=" crossorigin="anonymous" />
+
     <link rel="stylesheet" href="{% static 'css/event.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
     <body>
         
         <div class="container">
-          
             <div class="calendar light">
-        
               <div class="calendar_header">
-                <h2>Events</h2>
+                <div class="header_top">
+                  <div class="header_heading">
+                    <h5>Events</h5>
+                  </div>
+                  <div class="header_right">
+                    <h5>
+                      <a href="/subscription"> My subscriptions </a>
+                    </h5>
+                  </div>
+                </div>
                 <a href="/event/new/"> <div class="img__wrap">
                   <img src="/static/img/plus.png">
                   <div class="img__description">New!</div>
@@ -70,7 +80,7 @@
                   <div class="ei_Venue">Venue: {{ event.venue|urlize }} </div>
                   
                   <!-- Button code -->
-                  <div class="gCallink" style="position: absolute; bottom: 15px;right: 15px; max-width: 40%; font-size: 8px;">
+                  <div class="gCallink">
                     <a target="_blank" rel="noopener noreferrer" href="{{ event.event_link }}">
                       <img src="../../static/img/calgicon.jpeg" alt="" style="width:35px;" />
                     </a>
