@@ -206,6 +206,9 @@ def event_delete(request, pk):
     return handle_calender_event(request.user, event, access_token, refresh_token, method='delete')
 
 def subscription_list(request):
+    if not request.user.is_authenticated:
+        return redirect(LOGIN_URL + '?next=/subscription/')
+
     if request.method == "POST":
         body = json.loads(request.body)
 
