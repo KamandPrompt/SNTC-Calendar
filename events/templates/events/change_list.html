@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
@@ -14,7 +15,6 @@
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
     <body>
-        
         <div class="container">
             <div class="calendar light">
               <div class="calendar_header">
@@ -47,22 +47,23 @@
               <div class="calendar_events">
                 
                {% for event in events %}
-               {% if event.change %}
-              <div class="calendar_plan">
-              {% if event.day == date %}
-                <div class="cl_plan">
-                  <div class="cl_title">Today</div>
+                {% if event.change %}
+                <div class="calendar_plan">
+                  {% if event.day == date %}
+                    <div class="cl_plan">
+                      <div class="cl_title">Today</div>
+                    </div>
+                  {% elif event.day == tomorrow %}
+                  <div class="cl_plan">
+                      <div class="cl_title">Tomorrow</div>
+                  </div>
+                  {% else %}
+                  <div class="cl_plan">
+                      <div class="cl_title">Later</div>
+                  </div>
+                  {% endif %}
                 </div>
-              {% elif event.day == tomorrow %}
-              <div class="cl_plan">
-                  <div class="cl_title">Tomorrow</div>
-              {% else %}
-              <div class="cl_plan">
-                  <div class="cl_title">Later</div>
-              </div>
-              {% endif %}
-              </div>
-              {% endif %}
+                {% endif %}
 
                 <div class="event_item">
                 {% if event.start_time < time and event.day == date %}

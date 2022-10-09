@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Event, Subscription
+from .models import Club, Event, Subscription
 import datetime
 import calendar
 from django.urls import reverse
@@ -51,3 +51,4 @@ class EventAdmin(admin.ModelAdmin):
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Subscription)
+admin.site.register(Club)

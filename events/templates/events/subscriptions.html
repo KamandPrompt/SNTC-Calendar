@@ -1,0 +1,74 @@
+{% extends 'events/base.html' %}
+{% load materializecss %}
+{{ form|materializecss }}
+
+{% block content %}
+<div style="margin-top: 40px;
+width: 100%;
+box-shadow: 0px 0px 35px -16px rgb(0 0 0 / 75%);
+font-family: 'Roboto', sans-serif;
+padding: 4px 30px 20px 30px;
+color: #363b41;
+display: inline-block;">
+
+  <div style="display: flex;">
+    <h5> Manage Your subscriptions </h5>
+    <h5 style="margin-left: auto;">
+      <a href="/"> Home </a>
+    </h5>
+  </div>
+
+  <div id="subs-container">
+    <!-- Switch -->
+
+    <table>
+      <thead>
+        <tr>
+          <th>Club</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for club in clubs %}
+        <tr>
+          <td>{{ club.email }}</td>
+          <td>
+            <div class="switch">
+              <label>
+                Off
+                <input type="checkbox" name="{{ club.email }}" {% if club.checked %} checked {% endif %}>
+                <span class="lever"></span>
+                On
+              </label>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+  $(".switch").find("input[type=checkbox]").on("change", function () {
+    let checked = $(this).prop('checked');
+    let name = $(this).prop('name');
+
+    console.log(name, checked);
+    data = {
+      'club': name,
+      'checked': checked
+    }
+
+    postData('/subscription/', data)
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => console.log(err));
+  });
+</script>
+{% endblock %}

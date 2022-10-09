@@ -71,3 +71,7 @@ class Subscription(models.Model):
     id = models.AutoField(primary_key=True)
     club_email = models.CharField(u'Club Email', max_length=100, blank=False, null=False)
     student_email = models.CharField(u'Student Email', max_length=100)
+
+class Club(models.Model):
+    # storing the club emails, to distinguish from normal user
+    id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

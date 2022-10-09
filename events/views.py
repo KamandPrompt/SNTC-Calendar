@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import json
 
 from django.http import JsonResponse
 from events.calender_utils import CalenderEventsUtil
-from.models import Event, Subscription
+from.models import Club, Event, Subscription
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import datetime, timedelta
 import pytz
 from .forms import EventForm
 from allauth.socialaccount.models import SocialToken
+
+LOGIN_WITH_SCOPE = '/accounts/google/login/?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar'
+LOGIN_URL = '/accounts/google/login/'
 
 def change_list(request):
     utc_time = datetime.utcnow()
@@ -57,8 +61,17 @@ def change_list(request):
         'tomorrow': nextday,
         'user':usr })
 
+def is_club(user):
+    try:
+        club = Club.objects.get(id=user.id)
+        return True
+    except Club.DoesNotExist:
+        return False
+
 def has_calender_access(user):
     result = SocialToken.objects.filter(account__user=user, account__provider='google')
+
+    # TODO - Add a check if calender scope is available or not
 
     if len(result) == 0:
         return False, None, None
@@ -136,11 +149,14 @@ def handle_calender_event(user, event, access_token, refresh_token, method='crea
 
 def event_new(request):
     if not request.user.is_authenticated:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
+
+    if not is_club(request.user):
+        return JsonResponse({"error": "Events can only be created by clubs"})
 
     has_access, access_token, refresh_token = has_calender_access(request.user)
     if not has_access:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
 
     # We have refresh token, so we are good to go to create calender event
     if request.method == "POST":
@@ -155,11 +171,14 @@ def event_new(request):
 def event_edit(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if not request.user.is_authenticated  or request.user.first_name not in event.club:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
+
+    if not is_club(request.user):
+        return JsonResponse({"error": "Events can only be created by clubs"})
 
     has_access, access_token, refresh_token = has_calender_access(request.user)
     if not has_access:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
 
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
@@ -173,18 +192,50 @@ def event_edit(request, pk):
 def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if not request.user.is_authenticated  or request.user.first_name not in event.club:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
+
+    if not is_club(request.user):
+        return JsonResponse({"error": "Events can only be created by clubs"})
 
     has_access, access_token, refresh_token = has_calender_access(request.user)
     if not has_access:
-        return redirect('/accounts/google/login')
+        return redirect(LOGIN_WITH_SCOPE)
 
     event = Event.objects.filter(pk=pk)
     event.id = pk
     return handle_calender_event(request.user, event, access_token, refresh_token, method='delete')
 
 def subscription_list(request):
-    if not request.user.is_authenticated:
-        return redirect('/accounts/google/login')
+    if request.method == "POST":
+        body = json.loads(request.body)
 
-    return JsonResponse({"hello": "world"})
+        if body.get('checked'):
+            sub = Subscription(club_email=body.get('club'), student_email=request.user.email)
+            sub.save()
+
+            return JsonResponse({"success": True,
+                "student_email": request.user.email,
+                "club_email": body.get('club')
+            })
+        else:
+            sub = Subscription.objects.filter(club_email=body.get('club'))
+            sub = sub.filter(student_email=request.user.email)
+            sub.delete()
+
+            return JsonResponse({"success": True,
+                "student_email": request.user.email,
+                "club_email": body.get('club')
+            })
+
+
+    all_clubs = ['pc@students.iitmandi.ac.in', 'edc@students.iitmandi.ac.in']
+
+    sub = Subscription.objects.filter(student_email=request.user.email)
+    user_clubs = list(sub.values_list('club_email', flat=True))
+
+    clubs = []
+    for x in all_clubs:
+        clubs.append({"email": x, "checked": (x in user_clubs)})
+
+    return render(request, 'events/subscriptions.html',
+        {'clubs': clubs})

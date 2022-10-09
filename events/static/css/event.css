@@ -243,8 +243,19 @@ a:hover {
   margin-bottom: 12px;
 }
 
+@media (max-width: 600px) {
+  .header_right {
+    flex-flow: column;
+  }
+}
+
 .header_right {
   margin-left: auto;
+  display: flex;
+}
+
+.header_right a {
+  margin: 0 10px;
 }
 
 .gCallink {

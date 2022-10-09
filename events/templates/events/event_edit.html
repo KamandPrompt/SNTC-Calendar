@@ -3,9 +3,21 @@
 {{ form|materializecss }}
 
 {% block content %}
-    <h2>Edit event</h2>
-    <form method="POST" class="event-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+<h2>Edit event</h2>
+<form method="POST" class="event-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+    $(document).ready(function () {
+        // Initialize materialize data picker
+        $('.datepicker').datepicker({ 'format': 'yyyy-mm-dd' });
+        $('select').formSelect();
+    });
+</script>
+
 {% endblock %}

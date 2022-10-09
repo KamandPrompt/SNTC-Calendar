@@ -1,41 +1,58 @@
 {% load static %}
 <html>
-    <head>
-        <title>Activities | IIT Mandi</title>
-        {% block css %}
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/css/materialize.min.css" integrity="sha256-qj3p6P1fJIV+Ndv7RW1ovZI2UhOuboj9GcODzcNFIN8=" crossorigin="anonymous" />
-        {% endblock css %}
-    </head>
-    <body>
-        {% block javascript %}
-        <script
-          src="https://code.jquery.com/jquery-3.3.1.min.js"
-          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-          crossorigin="anonymous"></script>
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/js/materialize.min.js" integrity="sha256-SrBfGi+Zp2LhAvy9M1bWOCXztRU9Ztztxmu5BcYPcPE=" crossorigin="anonymous"></script>
-        
-        <script>
-        $(document).ready(function(){
-        
-          // Initialize materialize data picker
-          $('.datepicker').datepicker({'format': 'yyyy-mm-dd'});
-          $('select').formSelect();
-        
-        });
-        </script>
-        {% endblock javascript %}
-        <div class="page-header">
-            {% if user.is_authenticated %}<a href="{% url 'event_new' %}" class="top-menu"></a>{% endif %}
-        </div>
-        <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
-                    {% block content %}
-                    {% endblock %}
-                </div>
+
+<head>
+    <title>Activities | IIT Mandi</title>
+    {% block css %}
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/css/materialize.min.css"
+        integrity="sha256-qj3p6P1fJIV+Ndv7RW1ovZI2UhOuboj9GcODzcNFIN8=" crossorigin="anonymous" />
+    {% endblock css %}
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.1/js/materialize.min.js"
+        integrity="sha256-SrBfGi+Zp2LhAvy9M1bWOCXztRU9Ztztxmu5BcYPcPE=" crossorigin="anonymous"></script>
+
+    <div class="page-header">
+        {% if user.is_authenticated %}<a href="{% url 'event_new' %}" class="top-menu"></a>{% endif %}
+    </div>
+    <div class="content container">
+        <div class="row" style="max-width: 768px;">
+            <div class="col-md-8">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
-    </body>
+    </div>
+
+    <script>
+        async function postData(url = '', data = {}) {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, *same-origin, omit
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                redirect: 'follow', // manual, *follow, error
+                referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
+            });
+            return response.json(); // parses JSON response into native JavaScript objects
+        }
+    </script>
+
+    {% block javascript %}
+    {% endblock javascript %}
+
+</body>
+
 </html>
