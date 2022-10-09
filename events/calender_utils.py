@@ -47,7 +47,7 @@ class CalenderEventsUtil():
             reminders = {
                 'useDefault': False,
                 'overrides': [
-                    {'method': 'email', 'minutes': 24 * 60},
+                    {'method': 'email', 'minutes': 30},
                     {'method': 'popup', 'minutes': 10},
                 ]}
 
