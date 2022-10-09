@@ -1,13 +1,15 @@
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 class CalenderEventsUtil():
     scopes = ["https://www.googleapis.com/auth/calendar"]
 
-    # TODO : Take these values from environment
-    client_id = ""
-    client_secret = ""
+    client_id = os.getenv('GOOGLE_CLIENT_ID')
+    client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
     token_uri = "https://oauth2.googleapis.com/token"
 
     # User related OAuth tokens

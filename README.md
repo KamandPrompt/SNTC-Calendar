@@ -49,7 +49,8 @@ python manage.py runserver
 4. Go to [http://127.0.0.1:8000/admin](http://127.0.0.1:8000/admin) and sign in as superuser.
 5. Add a new `Site`.
 6. Add the `Social Applications` and the credentials and the site.
-7. You are ready to run the App!
+7. Copy `.env.sample` to a new file `.env` and add above credentials here also.
+8. You are ready to run the App!
 
 For running the web-app on the server as a background process, use **nohup**.
 ```bash

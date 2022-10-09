@@ -81,43 +81,50 @@ def has_calender_access(user):
     return True, access_token, refresh_token
 
 def handle_calender_event(event, access_token, refresh_token, method='create'):
-    ''' Creates the calender event and returns the values '''
+    ''' Creates the calender event and returns the values
+        @params method : 'create', 'update'
+    '''
 
-    print("EVENT OLD: ", event.__dict__)
     google_calender = CalenderEventsUtil(
         access_token=access_token,
         refresh_token=refresh_token
     )
 
-    start_date_time = event.day.isoformat() + "T" + event.start_time.isoformat()
-    end_date_time = event.day.isoformat() + "T" + event.end_time.isoformat()
+    calender_response = None
+    if method == 'delete':
+        calender_response = google_calender.delete_calender_event(event.id)
+    else:
+        start_date_time = event.day.isoformat() + "T" + event.start_time.isoformat()
+        end_date_time = event.day.isoformat() + "T" + event.end_time.isoformat()
 
-    # Now use the above google_calender object to create a new event
-    # TODO - Allow invites to be added
-    event_data = google_calender.create_event_data(
-        str(event.name),
-        str(event.venue) + ', IIT Mandi',
-        str(event.description),
-        start_date_time,
-        end_date_time,
-        ['sethpriyam1@gmail.com', 'b19058@students.iitmandi.ac.in'],
-    )
+        # Now use the above google_calender object to create a new event
+        # TODO - Allow invites to be added
+        event_data = google_calender.create_event_data(
+            str(event.name),
+            str(event.venue) + ', IIT Mandi',
+            str(event.description),
+            start_date_time,
+            end_date_time,
+            ['sethpriyam1@gmail.com', 'b19058@students.iitmandi.ac.in'],
+        )
 
-    calender_response = google_calender.create_calender_event(event_data)
-
-    print("CALENDER Response", calender_response)
+        if method == 'update':
+            calender_response = google_calender.update_calender_event(event.id, event_data)
+        else:
+            calender_response = google_calender.create_calender_event(event_data)
 
     if calender_response.get('success'):
         event.id = calender_response.get('event_id')
         event.event_link = calender_response.get('event_link')
-        
-        print("EVENT NEW", event.__dict__)
-        event.save()
 
-        # We will add the code to create event to calender
+        if method == 'delete':
+            event.delete()
+        else:
+            event.save()
+
         return redirect('change_list')                
     else:
-        resp = "Event creation failed on Google Calender" + str(calender_response)
+        resp = "Event " + str(method) + " failed on Google Calender" + str(calender_response)
         print(resp)
         return HTTPResponse(resp)
 
@@ -145,15 +152,16 @@ def event_edit(request, pk):
     if not request.user.is_authenticated  or request.user.first_name not in event.club:
         return redirect('/accounts/google/login')
 
+    has_access, access_token, refresh_token = has_calender_access(request.user)
+    if not has_access:
+        return redirect('/accounts/google/login')
+
     if request.method == "POST":
         form = EventForm(request.POST, instance=event)
         if form.is_valid():
             event = form.save(commit=False)
             event.club = request.user.first_name + " " + request.user.last_name
-            print(event.club)
-            print("PRIYAM Event", event)
-            # event.save()
-            return redirect('change_list')
+            return handle_calender_event(event, access_token, refresh_token, method='update')
     else:
         form = EventForm(instance=event)
     return render(request, 'events/event_edit.html', {'form': form})
@@ -162,5 +170,11 @@ def event_delete(request, pk):
     event = get_object_or_404(Event, pk=pk)
     if not request.user.is_authenticated  or request.user.first_name not in event.club:
         return redirect('/accounts/google/login')
-    Event.objects.filter(pk=pk).delete()
-    return redirect('change_list')
+
+    has_access, access_token, refresh_token = has_calender_access(request.user)
+    if not has_access:
+        return redirect('/accounts/google/login')
+
+    event = Event.objects.filter(pk=pk)
+    event.id = pk
+    return handle_calender_event(event, access_token, refresh_token, method='delete')
