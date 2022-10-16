@@ -143,6 +143,7 @@ TIME_INPUT_FORMATS = [
     '%H:%M',        # '14:30'
 ]
 
+SOCIALACCOUNT_LOGIN_ON_GET=True
 ACCOUNT_EMAIL_REQUIRED=True
 ACCOUNT_LOGOUT_ON_GET=True
 SOCIALACCOUNT_ADAPTER = 'mycalendar.adapters.IITMandiAccountAdapter'
@@ -158,3 +159,5 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://activities.iitmandi.co.in']
