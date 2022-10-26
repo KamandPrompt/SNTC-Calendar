@@ -32,4 +32,4 @@ class IITMandiAccountAdapter(DefaultSocialAccountAdapter):
                 pass
         
         if is_club:
-            club = Club.objects.get_or_create(id=sociallogin.user.email)
+            club = Club.objects.get_or_create(email=sociallogin.user.email)

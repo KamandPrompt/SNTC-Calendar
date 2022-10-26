@@ -63,10 +63,12 @@ def change_list(request):
 
 def is_club(user):
     try:
-        club = Club.objects.get(id=user.id)
+        club = Club.objects.get(email=user.email)
         return True
     except Club.DoesNotExist:
         return False
+    
+    return True
 
 def has_calender_access(user):
     result = SocialToken.objects.filter(account__user=user, account__provider='google')

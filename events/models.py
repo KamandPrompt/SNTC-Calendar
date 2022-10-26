@@ -74,4 +74,4 @@ class Subscription(models.Model):
 
 class Club(models.Model):
     # storing the club emails, to distinguish from normal user
-    id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    email = models.EmailField(primary_key=True)
