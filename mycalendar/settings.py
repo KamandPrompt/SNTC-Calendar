@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'events.apps.EventsConfig',
     'materializecssform',
     'django.contrib.sites',
+    'import_export',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

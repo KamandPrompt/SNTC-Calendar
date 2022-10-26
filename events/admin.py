@@ -8,6 +8,8 @@ import calendar
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from .utils import EventCalendar
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 
 # Register your models here.
 
@@ -49,6 +51,14 @@ class EventAdmin(admin.ModelAdmin):
         extra_context['calendar'] = mark_safe(html_calendar)
         return super(EventAdmin, self).changelist_view(request, extra_context)
 
+class SubscriptionResource(resources.ModelResource):
+
+    class Meta:
+        model = Subscription
+
+class SubscriptionAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_classes = [SubscriptionResource]
+
 admin.site.register(Event, EventAdmin)
-admin.site.register(Subscription)
+admin.site.register(Subscription, SubscriptionAdmin)
 admin.site.register(Club)
