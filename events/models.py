@@ -72,6 +72,11 @@ class Subscription(models.Model):
     club_email = models.CharField(u'Club Email', max_length=100, blank=False, null=False)
     student_email = models.CharField(u'Student Email', max_length=100)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['club_email', 'student_email'], name='Unique pair')
+        ]
+
 class Club(models.Model):
     # storing the club emails, to distinguish from normal user
     email = models.EmailField(primary_key=True)
