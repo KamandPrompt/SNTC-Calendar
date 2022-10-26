@@ -233,7 +233,7 @@ def subscription_list(request):
             })
 
 
-    all_clubs = ['pc@students.iitmandi.ac.in', 'edc@students.iitmandi.ac.in']
+    all_clubs = Club.objects.values_list('email', flat=True)
 
     sub = Subscription.objects.filter(student_email=request.user.email)
     user_clubs = list(sub.values_list('club_email', flat=True))
