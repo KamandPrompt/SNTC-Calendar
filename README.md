@@ -32,13 +32,12 @@ You might need to delete **db.sqlite3** to start afresh.
 
 ```bash
 pip install -r requirements.txt
-python manange.py makemigrations
+python manage.py makemigrations
 python manage.py migrate --run-syncdb
 python manage.py collectstatic
 python manage.py createsuperuser
 python manage.py runserver
 ```
-
 
 ### Adding Google OAuth2.0 API Key's credentials in admin Social Applications.
 1. create a Google Cloud Console Project.
@@ -57,3 +56,18 @@ For running the web-app on the server as a background process, use **nohup**.
 nohup python manage.py runserver &  
 ```
 This will output a *PID*, which can be later used to kill the process.
+
+-------------------------
+## Updates:
+
+> Note: http urls are no longer supported for non local domains
+
+> "python manage.py createsuperuser" should be run separately when in Docker to create the admin
+
+> In `/admin` page, setup "Social applications"
+
+> users directly sign in using Oauth, only clubs/secretaries can create events so add them to clubs separately from `/admin` page
+
+![](./resources/scopes.png)
+
+![](./resources/urls.png)
