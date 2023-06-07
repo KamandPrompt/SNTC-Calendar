@@ -11,7 +11,7 @@ import pytz
 from .forms import EventForm
 from allauth.socialaccount.models import SocialToken
 
-LOGIN_WITH_SCOPE = '/accounts/google/login/?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar'
+LOGIN_WITH_SCOPE = '/accounts/google/login/?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar&access_type=offline'
 LOGIN_URL = '/accounts/google/login/'
 
 def change_list(request):
