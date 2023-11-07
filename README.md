@@ -1,6 +1,46 @@
 ## GYMKHANA Calendar
 
-__Installing and running__
+
+### User guide:
+
+1. Adding events:
+    
+    
+    * Click on `+` to login. Only club IDs are allowed to add events. Request admins if club ID has to be enabled.
+    ![before-login](./resources/before-login.png)
+
+    * Click on `+` again to start adding event
+    ![after-login](./resources/after-login.png)
+
+    * Among below options: <br>
+    **If `Allow Overlaps` is disabled(`No`) when creating events then other clubs will not be able to add events in that duration. Hence disable it only if necessary.**
+    ![events-add](./resources/events-add.png)
+
+------------------------------------------------------------
+* **By default Secretaries/clubs can edit only the events added through their IDs.**
+
+* However permission can be given to allow to edit events added by others.<br>To check it go to [admin page(/admin)](https://activities.iitmandi.co.in/admin)
+
+1. If logged in and `Allowed to schedule events` you will see:
+![Allowed to schedule events](./resources/scheduling-allowed.png)
+
+1. If logged in and `NOT allowed to schedule events` you will see:
+![scheduling-not-allowed](./resources/scheduling-not-allowed.png)
+OR
+![scheduling-no-permissions](./resources/scheduling-no-permissions.png) 
+
+**If scheduling permissions are needed, kindly request the admins to add your `club ID` to `edit-event` group**
+
+---------------------------------------
+
+### Editing events:
+1. Go inside `Scheduling(admin/events/event/)` page. You can view schedule times in calendar and all the events below the calendar.
+![scheduling-times](./resources/scheduling-times.png)
+![scheduled-events](./resources/scheduled-events.png)
+1. To edit event: just click on them, edit and save.
+
+---------------------------------------
+### __Installing and running__
 
 Clone the repository
 
